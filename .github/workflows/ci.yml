@@ -1,0 +1,27 @@
+name: 'Terraform fmt Check'
+
+on:
+  push:
+
+jobs:
+  terraform:
+    name: 'Terraform fmt'
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive
+
+      - name: Check format result
+        run: |
+          if [ "${{ steps.fmt.outcome }}" = "success" ]; then
+            echo "All files formatted correctly"
+          else
+            echo "Terraform format check failed. Run 'terraform fmt' locally."
+          fi
